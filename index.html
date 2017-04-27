@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        div{
+            border: 1px rebeccapurple solid;
+            height: 500px;
+            width: 500px;
+            margin-bottom: 20px;
+            padding-top: 10px;
+            padding-left: 10px;
+
+        }
+    </style>
+</head>
+<body>
+    <div id="duihuakuang"></div>
+   姓名： <input type="text" id="name" placeholder="--请输入--" >
+   内容： <input type="text" id="neirong" placeholder="--请输入--" ><br>
+    <a href="javascript: void(0)" onclick="fasong()">发送</a>
+    <a href="javascript: void(0)" onclick="tuichu()">退出</a>
+</body>
+<script type="text/javascript" src="./js/jquery-2.2.4.min.js"></script>
+<script>
+    var ws=new WebSocket("ws://localhost:4567");
+    ws.onopen=function () {
+        $("#duihuakuang").html("连接状态readyState是"+ws.readyState);
+        console.log("连接状态readyState是"+ws.readyState);
+    }
+    ws.onmessage=function (res) {
+        $("#duihuakuang").append("<br>"+res.data);
+    }
+    ws.onclose=function(){
+        window.location.reload();
+    }
+    function fasong(){
+        var name=$("#name").val();
+        var neirong=$("#neirong").val();
+        var str="{name:'"+name+"',neirong:'"+neirong+"'}"
+        ws.send(str);
+    }
+    function tuichu() {
+        ws.close();
+    }
+</script>
+</html>
